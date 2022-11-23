@@ -28,6 +28,11 @@ public class FuncionariosController {
     public Funcionario getFuncionario(@PathVariable Long id) {
         return funcionarioRepo.findById(id).orElseThrow(RuntimeException::new);
     }
+
+    @GetMapping("/validar_login")
+    public Funcionario getCredencialCliente(@RequestParam String cpf, @RequestParam String senha) {
+        return funcionarioRepo.findByCpfAndSenha(cpf, senha);
+    }
     
     @PostMapping
     public ResponseEntity createFuncionario(@RequestBody Funcionario funcionario) throws URISyntaxException {
