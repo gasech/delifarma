@@ -1,1 +1,12 @@
+com\senac\delifarma\controller\PedidosController.class
+com\senac\delifarma\repository\PedidoRepo.class
+com\senac\delifarma\repository\ClienteRepo.class
+com\senac\delifarma\model\Funcionario.class
+com\senac\delifarma\model\Pedido.class
+com\senac\delifarma\repository\FuncionarioRepo.class
 com\senac\delifarma\DelifarmaApplication.class
+com\senac\delifarma\model\Produto.class
+com\senac\delifarma\repository\ProdutoRepo.class
+com\senac\delifarma\controller\ProdutosController.class
+com\senac\delifarma\model\Cliente.class
+com\senac\delifarma\controller\FuncionariosController.class
