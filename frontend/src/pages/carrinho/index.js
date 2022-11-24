@@ -1,32 +1,55 @@
 import styled from "@emotion/styled";
-import { TextField, IconButton, Button } from "@mui/material";
-import { Icon } from "@iconify/react"
+import { TextField, IconButton, Button, Tooltip } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { useContext } from "react";
+import { LoggedContext, CartContext } from "../../context/Context.js";
+import { useNavigate } from "react-router-dom";
 
 const Carrinho = () => {
-  const itensCarrinho = [
-    {
-      imagemUrl: "https://saude.abril.com.br/wp-content/uploads/2017/11/remc3a9dio01-1.jpg?quality=85&strip=info&resize=850,567",
-      titulo: "Remédio X 220mg",
-      categoria: "Categoria Y",
-      quantidade: 5,
-      valorUnitario: 8.99,
-      valorTotal() { return this.quantidade * this.valorUnitario },
-    }
-  ];
+  const { cartItems, setCartItems } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  const removeItemId = (id) => {
+    setCartItems(
+      cartItems.filter((item) => {
+        return item.id !== id;
+      })
+    )
+  }
+
+  const changeAmountId = (id, type) => {
+    setCartItems(
+      cartItems.map((item) => {
+        if (item.id !== id) return item;
+
+        if (type === "INCREMENT") {
+          item.quantidade += 1;
+        } else {
+          if (item.quantidade > 1) {
+            item.quantidade -= 1;
+          }
+        }
+
+        return item;
+      })
+    )
+  }
+
+  const finishCart = () => {
+    setCartItems([]);
+  }
 
   return (
     <CartWrapper>
       <CartProdutos>
-        <h2>Itens no carrinho</h2>
         {
-          itensCarrinho.map((item) => {
+          cartItems.map((item) => {
             return (
-              <CartProduto>
+              <CartProduto key={item.id}>
                 <img
                   alt=""
                   src={item.imagemUrl}
@@ -39,24 +62,29 @@ const Carrinho = () => {
                   <p>R${item.valorUnitario.toString().replace('.', ',')}</p>
                 </div>
                 <div className="prod-quant">
-                  <IconButton aria-label="Diminuir Quantidade" size="large" >
-                    <RemoveIcon />
-                  </IconButton>
+                  <Tooltip title="Diminuir Quantidade">
+                    <IconButton aria-label="Diminuir Quantidade" size="large" onClick={() => changeAmountId(item.id, "DECREMENT")} >
+                      <RemoveIcon />
+                    </IconButton>
+                  </Tooltip>
                   <TextField value={item.quantidade} inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} style={{ width: "50px" }} />
-                  <IconButton aria-label="Aumentar Quantidade" size="large">
-                    <AddIcon />
-                  </IconButton>
+                  <Tooltip title="Aumentar quantidade">
+                    <IconButton aria-label="Aumentar Quantidade" size="large" onClick={() => changeAmountId(item.id, "INCREMENT")} >
+                      <AddIcon />
+                    </IconButton>
+                  </Tooltip>
                 </div>
                 <div className="prod-total-price">
-                  <p>R${item.valorTotal().toString().replace('.', ',')}</p>
+                  <p>R${item.valorTotal().toFixed(2).replace('.', ',')}</p>
                 </div>
                 <div>
-                  <IconButton aria-label="Aumentar Quantidade" size="large">
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="Remover item do carrinho">
+                    <IconButton aria-label="Remover do carrinho" size="large" onClick={() => removeItemId(item.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </div>
               </CartProduto>
-
             )
           })
         }
@@ -66,16 +94,24 @@ const Carrinho = () => {
         <div className="finish-cart-buttons">
           <div className="finish-cart-spbe">
             <p>Subtotal</p>
-            <p>R$ 33,00</p>
+            <p>R$ {
+              cartItems.reduce(
+                (previousValue, currentValue) => previousValue + currentValue.valorTotal(), 0
+              ).toFixed(2).replace('.', ',')
+            }</p>
           </div>
           <div className="finish-cart-spbe">
-            <p>Total ({itensCarrinho.length} Ite{itensCarrinho.length === 1 ? "m" : "ns"})</p>
-            <p>R$ 33,00</p>
+            <p>Total ({cartItems.length} Ite{cartItems.length === 1 ? "m" : "ns"})</p>
+            <p>R$ {
+              cartItems.reduce(
+                (previousValue, currentValue) => previousValue + currentValue.valorTotal(), 0
+              ).toFixed(2).replace('.', ',')
+            }</p>
           </div>
-          <Button variant="contained" className="go-back-button" startIcon={<KeyboardBackspaceIcon />}>
+          <Button disableElevation variant="contained" className="go-back-button" onClick={() => { navigate("/") }} startIcon={<KeyboardBackspaceIcon />}>
             Continuar Comprando
           </Button>
-          <Button variant="contained" color="success" endIcon={<ArrowRightAltIcon />}>
+          <Button disableElevation variant="contained" color="success" onClick={() => { finishCart() }} endIcon={<ArrowRightAltIcon />}>
             Finalizar Compra
           </Button>
         </div>
@@ -88,6 +124,7 @@ const CartWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  min-height: 1200px;
   margin: 0 auto;
   padding: 40px;
   gap: 20px;
@@ -97,6 +134,7 @@ const CartProdutos = styled.div`
   display: flex;
   flex-direction: column;
   width: 65%;
+  height: fit-content;
   gap: 20px;
   border-radius: 20px;
   background-color: var(--primaryLayer);
@@ -106,6 +144,7 @@ const CartProdutos = styled.div`
 const CartProduto = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 30px;
  
@@ -136,7 +175,7 @@ const CartProduto = styled.div`
     color: var(--secundaryText)
   }
 
-  .prod-quantity {
+  .prod-quant {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,13 +183,14 @@ const CartProduto = styled.div`
   }
 
   .prod-total-price p {
-    font-weight: 600
+    font-weight: 600;
+    width: 100px;
   }
 `;
 
 const FinishCartWrapper = styled.div`
   width: 300px;
-  height: 400px;
+  height: 320px;
   border-radius: 20px;
   background-color: var(--primaryLayer);
   padding: 20px;

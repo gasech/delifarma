@@ -1,23 +1,50 @@
 import styled from "@emotion/styled";
 import { TextField, Button } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom"
+import { useContext, useState } from "react";
+import { LoggedContext } from "../../context/Context";
+import InputMask from 'react-input-mask';
+import { validateLogin } from "../../lib/api";
 
 const Entrar = () => {
+  const { loggedIn, setLoggedIn } = useContext(LoggedContext);
+  const navigate = useNavigate();
+  const [ cpfField, setCpfField ] = useState("");
+  const [ passwordField, setPasswordField ] = useState("");
+  const [ loading, setLoading ] = useState(false);
+
+  const onHandleForm = () => {
+    console.log(validateLogin(cpfField, passwordField));
+  }
+
   return (
     <LoginBox>
       <h2>Bem vindo(a) novamente</h2>
       <p>Por favor forneça os seus dados para prosseguir</p>
       <LoginForm>
-        <TextField id="outlined-basic" label="CPF" variant="outlined" maxLength="14" />
-        <TextField
-          id="outlined-password-input"
+        <InputMask
+          mask="999.999.999-99"
+          maskChar="_"
+        >
+          {() => <TextField 
+                    onChange={(e) => setCpfField(e.value)}
+                    id="cpf_input" 
+                    label="CPF" 
+                    variant="outlined" 
+                    maxLength="14" 
+          />}
+        </InputMask>
+        <TextField      
+          onChange={(e) => setPasswordField(e.value)}
+          id="senha_input"
           label="Senha"
           type="password"
           autoComplete="current-password"
         />
-        <p>Não tem uma conta ainda? <a href="/cadastrar">Cadastre-se aqui.</a></p>
-        <Button variant="contained">Entrar</Button>
+        <p>Não tem uma conta ainda? <Link to="/cadastrar">Cadastre-se aqui.</Link></p>
+        <Button color="primary" variant="contained" onClick={onHandleForm}>Entrar</Button>
       </LoginForm>
-    </LoginBox>
+    </LoginBox >
   )
 }
 const LoginBox = styled.div`
@@ -48,14 +75,6 @@ const LoginForm = styled.form`
 
   a {
     color: var(--primaryColor);
-  }
-
-  button {
-    background-color: var(--secundaryColor);
-  }
-
-  button:hover {
-    background-color: #26B7B7; 
   }
 `;
 

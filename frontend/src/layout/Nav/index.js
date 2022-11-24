@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Icon } from "@iconify/react"
+import { Icon } from "@iconify/react";
 
 const Nav = () => {
   return (
@@ -126,14 +126,14 @@ const NavWrapper = styled.nav`
     display: none;
     position: absolute;
     margin-left: -15px;
-    margin-top: 273px;
-    padding: 15px 10px;
+    margin-top: 250px;
+    padding: 5px 10px;
     background-color: #f9f9f9;
     border-radius: 0px 0px 5px 5px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     width: 158px;
-    height: 230px;
-    z-index: 1;
+    height: 210px;
+    z-index: 2;
   }
 
   .dropdown-menu ul {
@@ -151,13 +151,13 @@ const NavWrapper = styled.nav`
   }
 
   .dropdown-menu ul li a {
-    color: #494949;
+    color: #3f3f3f;
     width: 100%;
     height: 100%;
   }
 
   .dropdown-menu ul li:hover a {
-    color: var(--white);
+    color: #3f3f3f;
     background-color: #e8e8e8;
     border-radius: 5px;
   }

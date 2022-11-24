@@ -1,7 +1,13 @@
 import { Icon } from '@iconify/react'
 import styled from '@emotion/styled';
+import { useContext } from "react";
+import { Link } from 'react-router-dom';
+import { LoggedContext, CartContext } from "../../context/Context";
 
 const Header = () => {
+  const { loggedIn, setLoggedIn } = useContext(LoggedContext);
+  const { cartItems } = useContext(CartContext);
+
   return (
     <HeaderWrapper>
       <div className="container">
@@ -16,9 +22,18 @@ const Header = () => {
           </button>
         </form>
         <div className="right-buttons">
-          <a href="/carrinho"><Icon icon="el:shopping-cart-sign" color="white" />Carrinho (0)</a>
-          <a href="/minha-conta/pedidos"><Icon icon="mdi:package-variant" color="white" />Meus Pedidos</a>
-          <a href="/minha-conta"><Icon icon="carbon:user-avatar-filled" color="white" />Minha Conta</a>
+          <Link to="/carrinho"><Icon icon="el:shopping-cart-sign" color="white" />Carrinho ({cartItems.length})</Link>
+          {
+            loggedIn ?
+              <>
+                <Link to="/minha-conta/pedidos"><Icon icon="mdi:package-variant" color="white" />Meus Pedidos</Link>
+                <Link to="/minha-conta"><Icon icon="carbon:user-avatar-filled" color="white" />Minha Conta</Link>
+              </>
+              :
+              <>
+                <Link to="/entrar"><Icon icon="material-symbols:login" color="white" />Entrar</Link>
+              </>
+          }
         </div>
       </div>
     </HeaderWrapper>
@@ -86,10 +101,10 @@ form {
   gap: 5px;
   color: var(--contrastText);
   text-decoration: none;
-  width: 150px;
   font-weight: 500;
   border-radius: 20px;
-  padding: 5px 5px;
+  white-space: nowrap;
+  padding: 10px 15px;
 }
 
 .container .right-buttons a:hover {
@@ -128,7 +143,7 @@ form button svg {
 }
 
 form button:hover {
-  background-color: #CC0310;
+  background-color: var(--secundaryColor);
   cursor: pointer;
 }
 `;
