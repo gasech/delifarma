@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 import { Icon } from '@iconify/react'
 import { Link } from 'react-router-dom'
 import { Button } from '@mui/material';
+import { useContext } from 'react';
+import { CartContext } from '../context/Context';
 
 const Home = () => {
   const categorias = [
@@ -45,48 +47,80 @@ const Home = () => {
 
   const maisVendidos = [
     {
-      id: 0,
-      nome: "TypeScript",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 9.29,
-    },
-    {
-      id: 1,
-      nome: "JavaScript",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 5.25,
-    },
-    {
-      id: 2,
-      nome: "PHP",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 0.25,
-    },
-    {
       id: 3,
-      nome: "Python",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 7.25,
+      categoria: "Medicamentos",
+      titulo: "Xigduo XR 5mg + 1000mg Astrazeneca 60 Comprimidos",
+      descricao: "Xigduo XR 5mg + 1000mg Astrazeneca - 60 Comprimidos é um medicamento indicado para adultos com diabetes melittus tipo 2, quando o uso de dapagliflozina e metformina é apropriado. É um auxiliar da dieta e do exercício, prevenindo insuficiência cardíaca, morte cardiovascular ou nefropatia.",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/457788-500-500/571253---xigduo-xr-5mg-1000mg-astrazeneca-60-comprimidos.jpg",
+      valorUnitario: 172.24,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
     },
     {
-      id: 4,
-      nome: "C",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 17.25,
+      id: 8,
+      categoria: "Saúde e Bem-estar",
+      titulo: "Suplemento Alimentar Melatonina Neo Química Maracujá 90 Comprimidos",
+      descricao: "Suplemento Alimentar Melatonina Neo Química Maracujá 90 Comprimidos",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/777534-1000-1000/749001---Suplemento-Alimentar-Melatonina-Neo-Quimica-Maracuja-90-Comprimidos-1.jpg",
+      valorUnitario: 19.90,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
     },
     {
-      id: 5,
-      nome: "Lua",
-      imagemUrl: "",
-      link: "/produtos",
-      precoUnitario: 10.25,
+      id: 13,
+      categoria: "Saúde e Bem-estar",
+      titulo: "Bebida Láctea Yopro Chocolate 250ml",
+      descricao: "Bebida Láctea Yopro Chocolate 250ml",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/784989-1000-1000/762806---Bebida-Lactea-Yopro-Chocolate-250ml-1.jpg",
+      valorUnitario: 9.49,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
+    },
+    {
+      id: 25,
+      categoria: "Beleza",
+      titulo: "Discos de Algodão Ever Care 50 Unidades",
+      descricao: "Os Discos de Algodão Ever Care 50 Unidades são 100% puros, macios e absorventes. Além de remover maquiagem e esmalte, podem ser usados para cuidados com o seu bebê. Composto apenas por algodão, o disco possui duas faces: uma texturizada para a remoção de maquiagem e outra lisa para a aplicação de cremes.",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/660940-1000-1000/656445---discos-de-algodao-ever-care-50-unidades.jpg",
+      valorUnitario: 8.29,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
+    },
+    {
+      id: 31,
+      categoria: "Beleza",
+      titulo: "Protetor Diário Carefree Todo Dia sem Perfume 80 Unidades",
+      descricao: "Protetor diário CAREFREE Todo Dia é o protetor diário sem fragrância, ideal para quando não estamos naqueles dias.",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/784790-1000-1000/510890---Protetor-Diario-Carefree-Todo-Dia-80-Unidades-1.jpg",
+      valorUnitario: 20.58,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
+    },
+    {
+      id: 39,
+      categoria: "Higiene E Cuidados Pessoais",
+      titulo: "Creme para Pernas Goicoechea Calmante com Arnica e Camomila 350g",
+      descricao: "Creme para Pernas Goicoechea Calmante com Arnica e Camomila foi desenvolvido para auxiliar na redução da sensação de peso e cansaço nas pernas. Oferece uma sensação de frescor, com ação calmante imediata, deixando as pernas hidratadas e relaxadas por até 24 horas.",
+      imagemUrl: "https://drogariasp.vteximg.com.br/arquivos/ids/704036-1000-1000/635286---Creme-Para-Perna-Arnica-e-Camomila-400g-1.jpg",
+      valorUnitario: 33.45,
+      quantidade: 1,
+      valorTotal() { return this.quantidade * this.valorUnitario }
     }
   ];
+
+  const { cartItems, setCartItems } = useContext(CartContext);
+
+
+  const adicionarAoCarrinho = (produto) => {
+    if (cartItems.filter(p => p.id == produto.id).length > 0) {
+      let prod = cartItems.find(p => p.id == produto.id);
+      prod.quantidade++;
+
+      setCartItems(cartItems.filter(p => p.id !== produto.id), ...prod);
+    } else {
+      setCartItems([...cartItems, produto]);
+    }
+  }
 
   return (
     <MainWrapper>
@@ -139,13 +173,21 @@ const Home = () => {
           {
             maisVendidos.map((produto) => {
               return (
-                <Link to={produto.link} key={produto.id} className="produto">
-                  <div className="produtoImg">
+                <div key={produto.id} className="produto">
+                  <div className="produtoImg" style={{backgroundImage: `url("${produto.imagemUrl}")`}}>
                   </div>
-                  <span>{produto.nome}</span>
-                  <p>R${produto.precoUnitario.toString().replace('.', ',')}</p>
-                  <Button disableElevation variant="contained" size="small" fullWidth={true}>Comprar</Button>
-                </Link>
+                  <span>{produto.titulo}</span>
+                  <p>R${produto.valorUnitario.toString().replace('.', ',')}</p>
+                  <Button
+                    disableElevation
+                    onClick={() => {
+                      adicionarAoCarrinho(produto)
+                    }}
+                    variant="contained"
+                    size="small"
+                    fullWidth={true}
+                  >Comprar</Button>
+                </div>
               )
             })
           }
@@ -306,7 +348,7 @@ const MainWrapper = styled.main`
 
   .mais-vendidos .produto {
     width: 200px;
-    height: 250px; 
+    height: 370px; 
     background-color: #ffffff;
     border-radius: 10px;
     display: flex;
@@ -315,6 +357,10 @@ const MainWrapper = styled.main`
     padding: 5px;
     cursor: pointer;
     transition: box-shadow 0.5s;
+  }
+
+  .mais-vendidos .produto a {
+    margin-top: 10px;
     text-decoration: none;
     color: #1f1f1f;
   }
@@ -325,8 +371,8 @@ const MainWrapper = styled.main`
 
   .mais-vendidos .produtoImg {
     width: 100%; 
-    height: 100px;
-    background-color: pink;
+    height: 200px;
+    background-size: cover;
   }
 
   .mais-vendidos .produto span {

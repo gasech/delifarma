@@ -1,12 +1,33 @@
 import styled from "@emotion/styled";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { LoggedContext } from "../../context/Context";
+import { LoggedContext, UserContext} from "../../context/Context";
 import { Button, ButtonGroup, TextField } from "@mui/material"
 import { Icon } from "@iconify/react";
+import InputMask from 'react-input-mask'
+import { updateAddress, updatePassword, updatePersonalInfo } from "../../lib/api";
 
 const MinhaConta = () => {
   const { loggedIn, setLoggedIn } = useContext(LoggedContext);
+  const { user, setUser } = useContext(UserContext);
+  const [ userFields, setUserFields ] = useState({
+    password: user.password,
+    repeatPassword: user.password,
+    cpf: user.cpf,
+    nome: user.nome,
+    email: user.email,
+    telefone: user.telefone,
+    endereco: user.endereco,
+    numero: user.numero,
+    complemento: user.complemento,
+    cep: user.cep,
+    cidade: user.cidade,
+    estado: user.estado
+  })
+
+  const [messagePass, setMessagePass] = useState("");
+  const [messagePersonal, setMessagePersonal] = useState("");
+  const [messageAddress, setMessageAddress] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,9 +39,65 @@ const MinhaConta = () => {
 
   const logout = () => {
     setLoggedIn(false);
-    navigate("/");
+    setUser({})
+      
   }
 
+  const handleForms = async (formType) => {
+    switch(formType){
+      case "updateSenha":
+
+        let updaterPass = await updatePassword({
+          ...user, 
+          senha: userFields.password
+        })
+        
+        if(!updaterPass) {
+          setMessagePass("Erro ao alterar a senha!")
+        } else {
+          setUser(updaterPass);
+          setMessagePass("Senha alterada com sucesso!");
+        }
+
+        break;
+      case "updatePersonal":
+
+        let updaterPersonal = await updatePersonalInfo({
+          ...user, 
+          email: userFields.email,
+          telefone: userFields.telefone
+        })
+        if(!updaterPersonal) {
+          setMessagePersonal("Erro ao alterar as informações pessoais!")
+        } else {
+          setUser(updaterPersonal);
+          setMessagePersonal("Informações pessoais alterada com sucesso!");
+        }
+        
+        break;
+      case "updateAddress":
+        
+        let updaterAddress = await updateAddress({
+          ...user, 
+          endereco: userFields.endereco,
+          numero: userFields.numero,
+          cep: userFields.cep,
+          cidade: userFields.cidade,
+          estado: userFields.estado,
+          complemento: userFields.complemento
+        })
+
+        if(!updaterAddress) {
+          setMessageAddress("Erro ao alterar o endereço!")
+        } else {
+          setUser(updaterAddress);
+          setMessageAddress("Endereço alterado com sucesso!");
+        }
+
+        break;
+    }
+  }
+ 
   return (
     <MainWrapper>
       <div className="account-box">
@@ -30,7 +107,7 @@ const MinhaConta = () => {
             disableElevation
             orientation="vertical"
             color="primary"
-            fullWidth={true}
+            fullWidth
             size="large"
           >
             <Button
@@ -53,7 +130,7 @@ const MinhaConta = () => {
             className="logout-button"
             variant="contained"
             size="large"
-            fullWidth={true}
+            fullWidth
             color="error"
             startIcon={
               <Icon icon="ri:logout-box-r-line" />
@@ -73,16 +150,21 @@ const MinhaConta = () => {
                   label="Senha"
                   type="password"
                   variant="outlined"
+                  onChange={e => setUserFields({...userFields, password: e.target.value})}
                 />
                 <TextField
                   label="Repita a senha"
                   type="password"
                   variant="outlined"
+                  onChange={e => setUserFields({...userFields, repeatPassword: e.target.value})}
                 />
               </div>
+              <p>{messagePass}</p>
               <Button
                 color="primary"
                 variant="contained"
+                disableElevation
+                onClick={() => handleForms("updateSenha")}
               >Atualizar Senha</Button>
             </form>
             <form>
@@ -91,29 +173,36 @@ const MinhaConta = () => {
                 <TextField
                   disabled
                   label="CPF"
-                  defaultValue="123.123.123-40"
+                  defaultValue={user.cpf ? user.nome : ""}
+                  onChange={e => setUserFields({...userFields, cpf: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   disabled
                   label="Nome"
-                  defaultValue="Fulano da Silva"
+                  defaultValue={user.nome ? user.nome : ""}
+                  onChange={e => setUserFields({...userFields, nome: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="E-mail"
-                  defaultValue="fulanodasilva@gmail.com"
+                  defaultValue={user.email ? user.email : ""}
+                  onChange={e => setUserFields({...userFields, email: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="Telefone"
-                  defaultValue="(12) 91231-1234"
+                  defaultValue={user.telefone ? user.telefone : ""}
+                  onChange={e => setUserFields({...userFields, telefone: e.target.value})}
                   variant="outlined"
                 />
               </div>
+              <p>{messagePersonal}</p>
               <Button
                 color="primary"
                 variant="contained"
+                disableElevation
+                onClick={() => handleForms("updatePersonal")}
               >Atualizar Dados</Button>
             </form>
             <form>
@@ -121,37 +210,46 @@ const MinhaConta = () => {
               <div className="fields">
                 <TextField
                   label="Endereço"
-                  defaultValue="Rua 1234"
+                  defaultValue={user.endereco ? user.endereco : ""}
+                  onChange={e => setUserFields({...userFields, endereco: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="Número"
-                  defaultValue="Rua 1234"
+                  defaultValue={user.numero ? user.numero : ""}
+                  onChange={e => setUserFields({...userFields, numero: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="Complemento"
-                  defaultValue=""
+                  defaultValue={user.complemento ? user.complemento : ""}
+                  onChange={e => setUserFields({...userFields, complemento: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="CEP"
-                  defaultValue="123456-12"
+                  defaultValue={user.cep ? user.cep : ""}
+                  onChange={e => setUserFields({...userFields, cep: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="Cidade"
-                  defaultValue="São Paulo"
+                  defaultValue={user.cidade ? user.cidade : ""}
+                  onChange={e => setUserFields({...userFields, cidade: e.target.value})}
                   variant="outlined"
                 />
                 <TextField
                   label="Estado"
-                  defaultValue="SP"
+                  defaultValue={user.estado ? user.estado : ""}
+                  onChange={e => setUserFields({...userFields, estado: e.target.value})}
                 />
               </div>
+              <p>{messageAddress}</p>
               <Button
                 color="primary"
                 variant="contained"
+                disableElevation
+                onClick={() => handleForms("updateAddress")}
               >Atualizar Endereço</Button>
             </form>
           </div>

@@ -1,12 +1,16 @@
 import styled from "@emotion/styled";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Divider, Button, ButtonGroup, Table, TableCell, TableRow, TableHead, TableBody } from "@mui/material"
 import { LoggedContext } from "../../context/Context";
+import { getPedidos } from "../../lib/api";
 import { Icon } from '@iconify/react';
+import { UserContext } from "../../context/Context";
 
 const MeusPedidos = () => {
   const { loggedIn, setLoggedIn } = useContext(LoggedContext);
+  const { user, setUser } = useContext(UserContext);
+  const [ pedidos, setPedidos ] = useState([]);
 
   const navigate = useNavigate();
 
@@ -14,6 +18,15 @@ const MeusPedidos = () => {
     if (!loggedIn) {
       navigate("/entrar")
     }
+
+    const fetchData = async () => {
+      let pedidosData = await getPedidos(user.cpf);
+
+      setPedidos(pedidosData)
+    }
+
+    fetchData()
+      .catch(console.error)
   }, [])
 
   const logout = () => {
@@ -83,20 +96,26 @@ const MeusPedidos = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell>
-                  1
-                </TableCell>
-                <TableCell>
-                  R$19,99
-                </TableCell>
-                <TableCell>
-                  19:16 - 20/10/2022
-                </TableCell>
-                <TableCell>
-                  Aprovado
-                </TableCell>
-              </TableRow>
+              {
+                pedidos.map((pedido) => {
+                  return (
+                    <TableRow>
+                      <TableCell>
+                        {pedido.id}
+                      </TableCell>
+                      <TableCell>
+                        R${pedido.preco_total.toString().replace('.',',')}
+                      </TableCell>
+                      <TableCell>
+                        {pedido.data_pedido}
+                      </TableCell>
+                      <TableCell>
+                        {pedido.status}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              }
             </TableBody>
           </Table>
         </div>

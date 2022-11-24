@@ -13,7 +13,7 @@ const Header = () => {
       <div className="container">
         <div className="logo">
           <Icon icon="bi:bag-plus-fill" color="white" />
-          <a href="/">Delifarma</a>
+          <Link to="/">Delifarma</Link>
         </div>
         <form>
           <input type="text" placeholder="Digite aqui o que está procurando..." />
