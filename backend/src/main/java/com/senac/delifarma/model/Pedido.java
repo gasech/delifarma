@@ -18,18 +18,18 @@ public class Pedido {
     @Column (nullable = false, unique = true)
     private Long id;
     
-    @Column (nullable = false, unique = false)
-    private String cpf_cliente;
+        @Column (nullable = false, unique = false)
+        private String cpfCliente;
 
-    @Column (nullable = false, unique = false)
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime data_pedido;
+        @Column (nullable = false, unique = false)
+        @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+        private LocalDateTime data_pedido;
 
-    @Column (nullable = false, unique = false)
-    private double preco_total;
+        @Column (nullable = false, unique = false)
+        private double preco_total;
 
-    @Column (nullable = false, unique = true)
-    private String status;
+        @Column (nullable = false, unique = false)
+        private String status;
 
     public Pedido() {
     
@@ -43,12 +43,12 @@ public class Pedido {
         this.id = id;
     }
 
-    public String getCpf_cliente() {
-        return this.cpf_cliente;
+    public String getCpfCliente() {
+        return this.cpfCliente;
     }
 
-    public void setCpf_cliente(String cpf_cliente) {
-        this.cpf_cliente = cpf_cliente;
+    public void setCpfCliente(String cpfCliente) {
+        this.cpfCliente = cpfCliente;
     }
 
     public LocalDateTime getData_pedido() {

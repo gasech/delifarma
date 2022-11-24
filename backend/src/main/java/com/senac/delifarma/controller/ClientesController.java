@@ -9,12 +9,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RestController
 @RequestMapping("/clientes")
 public class ClientesController {
     private final ClienteRepo clienteRepo;
 
-    public ClientesController(ClienteRepo clienteRepo){
+    public ClientesController(ClienteRepo clienteRepo) {
         this.clienteRepo = clienteRepo;
     }
 
@@ -32,7 +33,7 @@ public class ClientesController {
     public Cliente getCliente(@PathVariable Long id) {
         return clienteRepo.findById(id).orElseThrow(RuntimeException::new);
     }
-    
+
     @PostMapping
     public ResponseEntity createCliente(@RequestBody Cliente cliente) throws URISyntaxException {
         Cliente savedCliente = clienteRepo.save(cliente);
@@ -57,7 +58,7 @@ public class ClientesController {
         currentCliente = clienteRepo.save(cliente);
         return ResponseEntity.ok(currentCliente);
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteCliente(@PathVariable Long id) {
         clienteRepo.deleteById(id);

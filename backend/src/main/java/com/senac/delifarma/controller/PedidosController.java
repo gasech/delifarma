@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RestController
 @RequestMapping("/pedidos")
 public class PedidosController {
@@ -21,6 +22,11 @@ public class PedidosController {
     @GetMapping
     public List<Pedido> getPedidos() {
         return pedidoRepo.findAll();
+    }
+
+    @GetMapping("/listar_pedidos")
+    public List<Pedido> getPedidosCpf(@RequestParam String cpf_cliente) {
+        return pedidoRepo.findByCpfCliente(cpf_cliente);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +43,7 @@ public class PedidosController {
     @PutMapping("/{id}")
     public ResponseEntity updatePedido(@PathVariable Long id, @RequestBody Pedido pedido) {
         Pedido currentPedido = pedidoRepo.findById(id).orElseThrow(RuntimeException::new);
-        currentPedido.setCpf_cliente(pedido.getCpf_cliente());
+        currentPedido.setCpfCliente(pedido.getCpfCliente());
         currentPedido.setData_pedido(pedido.getData_pedido());
         currentPedido.setPreco_total(pedido.getPreco_total());
         currentPedido.setStatus(pedido.getStatus());
