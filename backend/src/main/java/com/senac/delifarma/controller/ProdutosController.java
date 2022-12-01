@@ -40,7 +40,7 @@ public class ProdutosController {
     public ResponseEntity updateProduto(@PathVariable Long id, @RequestBody Produto produto) {
         Produto currentProduto = produtoRepo.findById(id).orElseThrow(RuntimeException::new);
         currentProduto.setCategoria(produto.getCategoria());
-        currentProduto.setNome(produto.getNome());
+        currentProduto.setTitulo(produto.getTitulo());
         currentProduto.setDescricao(produto.getDescricao());
         currentProduto.setImagemUrl(produto.getImagemUrl());
         currentProduto.setPrecoUnitario(produto.getPrecoUnitario());

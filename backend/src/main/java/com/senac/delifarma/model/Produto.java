@@ -18,7 +18,7 @@ public class Produto {
     private String categoria;
 
     @Column (nullable = false, unique = false)
-    private String nome;
+    private String titulo;
 
     @Column (nullable = false, unique = false, columnDefinition = "TEXT")
     private String descricao;
@@ -32,14 +32,13 @@ public class Produto {
     @Column (nullable = false, unique = false)
     private Long quantidadeEstoque;
 
-
     public Produto() {
     }
 
-    public Produto(Long id, String categoria, String nome, String descricao, String imagemUrl, double precoUnitario, Long quantidadeEstoque) {
+    public Produto(Long id, String categoria, String titulo, String descricao, String imagemUrl, double precoUnitario, Long quantidadeEstoque) {
         this.id = id;
         this.categoria = categoria;
-        this.nome = nome;
+        this.titulo = titulo;
         this.descricao = descricao;
         this.imagemUrl = imagemUrl;
         this.precoUnitario = precoUnitario;
@@ -62,12 +61,12 @@ public class Produto {
         this.categoria = categoria;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getTitulo() {
+        return this.titulo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getDescricao() {
