@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
-// Pages
+// Pages Clientes
 import Home from './pages/index.js';
 import NotFound from './pages/notFound';
 import Carrinho from './pages/carrinho';
@@ -11,6 +11,10 @@ import Cadastrar from './pages/cadastrar';
 import MinhaConta from './pages/minhaConta';
 import MeusPedidos from './pages/meusPedidos';
 import Produtos from './pages/produtos';
+
+// Pages Funcionarios
+import EntrarPainel from './pages/entrarPainel';
+import Painel from './pages/painel';
 
 // Layout
 import Header from './layout/Header';
@@ -43,6 +47,8 @@ function App() {
           <Route path="/cadastrar" element={<Cadastrar />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
           <Route path="/minha-conta/pedidos" element={<MeusPedidos />} />
+          <Route path="/entrar-painel" element={<EntrarPainel />} />
+          <Route path="/painel" element={<Painel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

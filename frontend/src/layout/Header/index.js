@@ -1,12 +1,23 @@
 import { Icon } from '@iconify/react'
 import styled from '@emotion/styled';
-import { useContext } from "react";
-import { Link } from 'react-router-dom';
-import { LoggedContext, CartContext } from "../../context/Context";
+import { useContext, useState } from "react";
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { LoggedContext, CartContext, UserContext } from "../../context/Context";
+import { Menu } from "@mui/material";
 
 const Header = () => {
   const { loggedIn, setLoggedIn } = useContext(LoggedContext);
   const { cartItems } = useContext(CartContext);
+  const { user, setUser } = useContext(UserContext);
+  const [searchParamss, setSearchParamss] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    setLoggedIn(false);
+    setUser({});
+  }
 
   return (
     <HeaderWrapper>
@@ -15,8 +26,17 @@ const Header = () => {
           <Icon icon="bi:bag-plus-fill" color="white" />
           <Link to="/">Delifarma</Link>
         </div>
-        <form>
-          <input type="text" placeholder="Digite aqui o que está procurando..." />
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          let sp = searchParamss.replaceAll(' ', '-').toLowerCase();
+          navigate(`/produtos?search=${sp}`);
+        }
+        }>
+          <input
+            type="text"
+            placeholder="Digite aqui o que está procurando..."
+            onChange={e => setSearchParamss(e.target.value)}
+          />
           <button type="submit">
             <Icon icon="ant-design:search-outlined" color="white" />
           </button>
@@ -27,11 +47,26 @@ const Header = () => {
             loggedIn ?
               <>
                 <Link to="/minha-conta/pedidos"><Icon icon="mdi:package-variant" color="white" />Meus Pedidos</Link>
-                <Link to="/minha-conta"><Icon icon="carbon:user-avatar-filled" color="white" />Minha Conta</Link>
+                <Link to="" className="account-button">
+                  <Icon icon="bi:menu-down" />Olá {user.nome.split(" ")[0]}
+                  <div className="dropdown-menu">
+                    <Link to="/minha-conta">
+                      <Icon icon="carbon:user-avatar-filled" color="white" />
+                      Minha Conta
+                    </Link>
+                    <Link
+                      to=""
+                      onClick={() => { logout() }}
+                    >              <Icon icon="ri:logout-box-r-line" />
+                      Sair</Link>
+                  </div>
+                </Link>
               </>
               :
               <>
-                <Link to="/entrar"><Icon icon="material-symbols:login" color="white" />Entrar</Link>
+                <Link to="/entrar">
+                  <Icon icon="material-symbols:login" color="white" />Entrar
+                </Link>
               </>
           }
         </div>
@@ -105,6 +140,47 @@ form {
   border-radius: 20px;
   white-space: nowrap;
   padding: 10px 15px;
+}
+
+.container .right-buttons .account-button {
+  transition: border-radius 4s;
+  min-width: 170px;
+}
+
+.container .right-buttons .account-button:hover {
+  border-radius: 20px 20px 0px 0px;
+}
+
+.container .right-buttons a .dropdown-menu {
+  display: none;
+  margin-top: 130px;
+  position: absolute;
+  padding: 10px 10px;
+  border-radius: 0px 0px 20px 20px;
+  background-color: #373737;
+  width: 170px;
+  height: auto;
+}
+
+.container .right-buttons a .dropdown-menu a:hover {
+  background-color: #494949;
+  border-radius: 5px;
+}
+
+.container .right-buttons a:hover .dropdown-menu {
+  display: block;
+}
+
+.container .right-buttons a:hover .dropdown-menu a {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 10px;
+}
+
+.container .right-buttons a:hover .dropdown-menu a svg {
+  height: 20px;
+  width: 20px;
+  
 }
 
 .container .right-buttons a:hover {

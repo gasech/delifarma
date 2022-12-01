@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { LoggedContext, UserContext} from "../../context/Context";
+import { LoggedContext, UserContext } from "../../context/Context";
 import { Button, ButtonGroup, TextField } from "@mui/material"
 import { Icon } from "@iconify/react";
 import InputMask from 'react-input-mask'
@@ -10,7 +10,7 @@ import { updateAddress, updatePassword, updatePersonalInfo } from "../../lib/api
 const MinhaConta = () => {
   const { loggedIn, setLoggedIn } = useContext(LoggedContext);
   const { user, setUser } = useContext(UserContext);
-  const [ userFields, setUserFields ] = useState({
+  const [userFields, setUserFields] = useState({
     password: user.password,
     repeatPassword: user.password,
     cpf: user.cpf,
@@ -40,19 +40,19 @@ const MinhaConta = () => {
   const logout = () => {
     setLoggedIn(false);
     setUser({})
-      
+
   }
 
   const handleForms = async (formType) => {
-    switch(formType){
+    switch (formType) {
       case "updateSenha":
 
         let updaterPass = await updatePassword({
-          ...user, 
+          ...user,
           senha: userFields.password
         })
-        
-        if(!updaterPass) {
+
+        if (!updaterPass) {
           setMessagePass("Erro ao alterar a senha!")
         } else {
           setUser(updaterPass);
@@ -63,22 +63,22 @@ const MinhaConta = () => {
       case "updatePersonal":
 
         let updaterPersonal = await updatePersonalInfo({
-          ...user, 
+          ...user,
           email: userFields.email,
           telefone: userFields.telefone
         })
-        if(!updaterPersonal) {
+        if (!updaterPersonal) {
           setMessagePersonal("Erro ao alterar as informações pessoais!")
         } else {
           setUser(updaterPersonal);
           setMessagePersonal("Informações pessoais alterada com sucesso!");
         }
-        
+
         break;
       case "updateAddress":
-        
+
         let updaterAddress = await updateAddress({
-          ...user, 
+          ...user,
           endereco: userFields.endereco,
           numero: userFields.numero,
           cep: userFields.cep,
@@ -87,7 +87,7 @@ const MinhaConta = () => {
           complemento: userFields.complemento
         })
 
-        if(!updaterAddress) {
+        if (!updaterAddress) {
           setMessageAddress("Erro ao alterar o endereço!")
         } else {
           setUser(updaterAddress);
@@ -97,49 +97,10 @@ const MinhaConta = () => {
         break;
     }
   }
- 
+
   return (
     <MainWrapper>
       <div className="account-box">
-        <div className="sidebar">
-          <img src="https://media.discordapp.net/attachments/904631303733919764/1043643806387535912/128-1280406_view-user-icon-png-user-circle-icon-png.png" width={135} />
-          <ButtonGroup
-            disableElevation
-            orientation="vertical"
-            color="primary"
-            fullWidth
-            size="large"
-          >
-            <Button
-              variant="contained"
-              startIcon={
-                <Icon icon="carbon:user-avatar-filled" />
-              }
-            >
-              Minha Conta
-            </Button>
-            <Button
-              startIcon={
-                <Icon icon="mdi:package-variant" />
-              }
-              onClick={() => { navigate('/minha-conta/pedidos') }}
-            >Meus Pedidos</Button>
-          </ButtonGroup>
-          <Button
-            disableElevation
-            className="logout-button"
-            variant="contained"
-            size="large"
-            fullWidth
-            color="error"
-            startIcon={
-              <Icon icon="ri:logout-box-r-line" />
-            }
-            onClick={() => { logout() }}
-          >
-            Sair
-          </Button>
-        </div>
         <div className="content">
           <h2>Minha Conta</h2>
           <div className="flex-row">
@@ -150,13 +111,13 @@ const MinhaConta = () => {
                   label="Senha"
                   type="password"
                   variant="outlined"
-                  onChange={e => setUserFields({...userFields, password: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, password: e.target.value })}
                 />
                 <TextField
                   label="Repita a senha"
                   type="password"
                   variant="outlined"
-                  onChange={e => setUserFields({...userFields, repeatPassword: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, repeatPassword: e.target.value })}
                 />
               </div>
               <p>{messagePass}</p>
@@ -173,29 +134,31 @@ const MinhaConta = () => {
                 <TextField
                   disabled
                   label="CPF"
-                  defaultValue={user.cpf ? user.nome : ""}
-                  onChange={e => setUserFields({...userFields, cpf: e.target.value})}
+                  defaultValue={user.cpf ? user.cpf : ""}
+                  onChange={e => setUserFields({ ...userFields, cpf: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   disabled
                   label="Nome"
                   defaultValue={user.nome ? user.nome : ""}
-                  onChange={e => setUserFields({...userFields, nome: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, nome: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="E-mail"
                   defaultValue={user.email ? user.email : ""}
-                  onChange={e => setUserFields({...userFields, email: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, email: e.target.value })}
                   variant="outlined"
                 />
-                <TextField
-                  label="Telefone"
+                <InputMask
+                  mask="(99) 99999-9999"
+                  maskChar="_"
                   defaultValue={user.telefone ? user.telefone : ""}
-                  onChange={e => setUserFields({...userFields, telefone: e.target.value})}
-                  variant="outlined"
-                />
+                  onChange={e => setUserFields({ ...userFields, telefone: e.target.value })}
+                >
+                  {() => <TextField label="Telefone" variant="outlined" maxLength="16" />}
+                </InputMask>
               </div>
               <p>{messagePersonal}</p>
               <Button
@@ -211,37 +174,37 @@ const MinhaConta = () => {
                 <TextField
                   label="Endereço"
                   defaultValue={user.endereco ? user.endereco : ""}
-                  onChange={e => setUserFields({...userFields, endereco: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, endereco: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="Número"
                   defaultValue={user.numero ? user.numero : ""}
-                  onChange={e => setUserFields({...userFields, numero: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, numero: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="Complemento"
                   defaultValue={user.complemento ? user.complemento : ""}
-                  onChange={e => setUserFields({...userFields, complemento: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, complemento: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="CEP"
                   defaultValue={user.cep ? user.cep : ""}
-                  onChange={e => setUserFields({...userFields, cep: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, cep: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="Cidade"
                   defaultValue={user.cidade ? user.cidade : ""}
-                  onChange={e => setUserFields({...userFields, cidade: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, cidade: e.target.value })}
                   variant="outlined"
                 />
                 <TextField
                   label="Estado"
                   defaultValue={user.estado ? user.estado : ""}
-                  onChange={e => setUserFields({...userFields, estado: e.target.value})}
+                  onChange={e => setUserFields({ ...userFields, estado: e.target.value })}
                 />
               </div>
               <p>{messageAddress}</p>

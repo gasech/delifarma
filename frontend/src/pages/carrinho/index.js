@@ -12,8 +12,8 @@ import { criarPedido } from "../../lib/api.js";
 
 const Carrinho = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
-  const [ errorMessage, setErrorMessage] = useState("");
-  const [ loading, setLoading] = useState(false);
+  const [ errorMessage, setErrorMessage ] = useState("");
+  const [ loading, setLoading ] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const { loggedIn, setLoggedIn } = useContext(LoggedContext);
 
@@ -31,12 +31,15 @@ const Carrinho = () => {
     setLoading(true);
     if (loggedIn) {
       let precoTotal = cartItems.reduce(
-        (previousValue, currentValue) => previousValue + currentValue.valorTotal(), 0
+        (previousValue, currentValue) => previousValue + (currentValue.quantidade * currentValue.precoUnitario), 0
       ).toFixed(2);
+
+      let currentDate = new Date();
+      let dataFormatada = `${currentDate.getDate().toString().padStart(2, "0")}-${(currentDate.getMonth() + 1).toString().padStart(2, "0")}-${currentDate.getFullYear()} ${currentDate.getHours().toString().padStart(2, "0")}:${currentDate.getMinutes().toString().padStart(2, "0")}:${currentDate.getSeconds().toString().padStart(2, "0")}`;
 
       await criarPedido({
         cpf: user.cpf,
-        data_pedido: "24-11-2022 10:31:10",
+        data_pedido: dataFormatada,
         preco_total: precoTotal,
         status: "Em análise",
       });
@@ -88,7 +91,7 @@ const Carrinho = () => {
                   <a href="#"><p>{item.categoria}</p></a>
                 </div>
                 <div className="prod-unit-price">
-                  <p>R${item.valorUnitario.toString().replace('.', ',')}</p>
+                  <p>R${item.precoUnitario.toFixed(2).toString().replace('.', ',')}</p>
                 </div>
                 <div className="prod-quant">
                   <Tooltip title="Diminuir Quantidade">
@@ -104,7 +107,7 @@ const Carrinho = () => {
                   </Tooltip>
                 </div>
                 <div className="prod-total-price">
-                  <p>R${item.valorTotal().toFixed(2).replace('.', ',')}</p>
+                  <p>R${(item.quantidade * item.precoUnitario).toFixed(2).replace('.', ',')}</p>
                 </div>
                 <div>
                   <Tooltip title="Remover item do carrinho">
@@ -125,7 +128,8 @@ const Carrinho = () => {
             <p>Subtotal</p>
             <p>R$ {
               cartItems.reduce(
-                (previousValue, currentValue) => previousValue + currentValue.valorTotal(), 0
+                (previousValue, currentValue) => previousValue + (currentValue.quantidade * currentValue.precoUnitario)
+                , 0
               ).toFixed(2).replace('.', ',')
             }</p>
           </div>
@@ -133,11 +137,11 @@ const Carrinho = () => {
             <p>Total ({cartItems.length} Ite{cartItems.length === 1 ? "m" : "ns"})</p>
             <p>R$ {
               cartItems.reduce(
-                (previousValue, currentValue) => previousValue + currentValue.valorTotal(), 0
+                (previousValue, currentValue) => previousValue + (currentValue.quantidade * currentValue.precoUnitario), 0
               ).toFixed(2).replace('.', ',')
             }</p>
           </div>
-          <Button disableElevation variant="contained" className="go-back-button" onClick={() => { navigate("/") }} startIcon={<KeyboardBackspaceIcon />}>
+          <Button disableElevation variant="contained" className="go-back-button" onClick={() => { navigate("/produtos") }} startIcon={<KeyboardBackspaceIcon />}>
             Continuar Comprando
           </Button>
           <Button disableElevation variant="contained" color="success" onClick={() => { handleCart() }} endIcon={<ArrowRightAltIcon />}>
@@ -194,8 +198,8 @@ const CartProduto = styled.div`
   }
 
   .prod-title-category {
-    min-width: 350px;
-    width: 350px;
+    min-width: 150px;
+    width: 150px;
   }
 
   .prod-title-category a {
@@ -233,7 +237,7 @@ const CartProduto = styled.div`
 
   .prod-total-price p {
     font-weight: 600;
-    width: 100px;
+    width: 50px;
   }
 `;
 

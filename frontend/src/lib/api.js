@@ -16,6 +16,24 @@ export const validateLogin = async (cpf, senha) => {
   }
 }
 
+export const validateLoginEmployee = async (cpf, senha) => {
+  try {
+    let loginData = await fetch(`http://localhost:8080/funcionarios/validar_login?cpf=${cpf}&senha=${senha}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': "*",
+        'Access-Control-Allow-Origin': "*"
+      }
+    });
+
+    let finalData = await loginData.json();
+    return finalData;
+  } catch (err) {
+    return false;
+  }
+}
+
 export const registerUser = async (email, cpf, nome, telefone, senha) => {
   try {
     let loginData = await fetch(`http://localhost:8080/clientes`, {
@@ -131,7 +149,7 @@ export const updateAddress = async (user) => {
         nome: user.nome,
         email: user.email,
         telefone: user.telefone,
-        endereco: user.endereco, 
+        endereco: user.endereco,
         complemento: user.complemento,
         numero: user.numero,
         cep: user.cep,
@@ -141,9 +159,9 @@ export const updateAddress = async (user) => {
     });
 
     let finalData = await loginData.json();
-    
+
     return finalData;
-  } catch(err) {
+  } catch (err) {
 
     return false;
   }
@@ -190,6 +208,84 @@ export const criarPedido = async (pedido) => {
     return finalData;
   } catch (err) {
 
+    return false;
+  }
+}
+
+export const getProdutos = async () => {
+  try {
+    let produtosData = await fetch(`http://localhost:8080/produtos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': "*",
+        'Access-Control-Allow-Origin': "*"
+      }
+    });
+
+    let finalData = await produtosData.json();
+
+    return finalData;
+  } catch (err) {
+    return false;
+  }
+}
+
+export const getFuncionarios = async () => {
+  try {
+    let funcionariosData = await fetch(`http://localhost:8080/funcionarios`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': "*",
+        'Access-Control-Allow-Origin': "*"
+      }
+    });
+
+    let finalData = await funcionariosData.json();
+
+    return finalData;
+  } catch (err) {
+    return false;
+  }
+}
+
+
+
+export const getClientes = async () => {
+  try {
+    let clientesData = await fetch(`http://localhost:8080/clientes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': "*",
+        'Access-Control-Allow-Origin': "*"
+      }
+    });
+
+    let finalData = await clientesData.json();
+
+    return finalData;
+  } catch (err) {
+    return false;
+  }
+}
+
+export const getAllPedidos = async () => {
+  try {
+    let pedidosData = await fetch(`http://localhost:8080/pedidos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': "*",
+        'Access-Control-Allow-Origin': "*"
+      }
+    });
+
+    let finalData = await pedidosData.json();
+
+    return finalData;
+  } catch (err) {
     return false;
   }
 }
