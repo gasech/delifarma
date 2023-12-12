@@ -46,7 +46,7 @@ npm start
 ```
 
 ## Documentation
-All of the documentation is written in Portuguese from Brazil.
+All of the documentation are written in Portuguese from Brazil.
 
 ### UML case 
 
