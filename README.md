@@ -28,10 +28,13 @@ Developing in this application should be very simple, I'm using a MVC architectu
 ### Running a local development environment
 
 1. Start your MySQL server
-```sh
 
-```
+Run a database called `delifarma` and run the sql script located in MySQL/
+
 2. Start your API Rest with Spring
+
+Before starting your backend adjust your MySQL `datasource.url`, `datasource.username` and `datasource.password` in `backend/src/main/resources/application.properties` according to your local database environment.
+
 ```sh
 cd backend 
 chmod +x ./mvnw
