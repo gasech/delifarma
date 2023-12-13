@@ -6,6 +6,24 @@ Full Stack Pharmaceutical Application w/ Spring and React
 
 This is an online ecommerce that I developed during college. All transactions are fictional.
 
+## Sections
+
+<!-- vim-markdown-toc Marked -->
+
+* [Programming language and tools used](#programming-language-and-tools-used)
+* [Developing](#developing)
+    * [Requirements](#requirements)
+    * [Running a local development environment](#running-a-local-development-environment)
+        * [1. Start your MySQL server](#1.-start-your-mysql-server)
+        * [2. Start your API Rest with Spring](#2.-start-your-api-rest-with-spring)
+        * [3. Run your local application frontend with Node.js](#3.-run-your-local-application-frontend-with-node.js)
+* [Documentation](#documentation)
+    * [UML case](#uml-case)
+    * [Application architecture](#application-architecture)
+* [References](#references)
+
+<!-- vim-markdown-toc -->
+
 ## Programming language and tools used
 <p align="left">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/>  
@@ -27,11 +45,11 @@ Developing in this application should be very simple, I'm using a MVC architectu
 
 ### Running a local development environment
 
-1. Start your MySQL server
+#### 1. Start your MySQL server
 
 Run a database called `delifarma` and run the sql script located in MySQL/
 
-2. Start your API Rest with Spring
+#### 2. Start your API Rest with Spring
 
 Before starting your backend adjust your MySQL `datasource.url`, `datasource.username` and `datasource.password` in `backend/src/main/resources/application.properties` according to your local database environment.
 
@@ -41,7 +59,7 @@ chmod +x ./mvnw
 ./mvnw
 ```
 
-3. Run your local application with Node
+#### 3. Run your local application frontend with Node.js
 ```sh
 cd frontend
 npm install
